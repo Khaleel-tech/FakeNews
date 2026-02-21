@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard | TruthLens{% endblock %}
+{% block content %}
+<section class="dashboard-grid">
+  <div class="card">
+    <h2>Check News Credibility</h2>
+    <p>Paste a headline and content to classify whether it is likely true or false.</p>
+    <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit" class="btn-primary">Analyze News</button>
+    </form>
+
+    <div class="samples">
+      <h3>Popular News Suggestions</h3>
+      {% for item in popular_news_samples %}
+        <div class="sample-item">
+          <strong>{{ item.headline }}</strong>
+          <p>{{ item.content }}</p>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Detection Result</h2>
+    {% if result %}
+      <p><strong>Headline:</strong> {{ result.headline }}</p>
+      <p><strong>Prediction:</strong>
+        <span class="badge {% if result.classification == 'True' %}badge-true{% else %}badge-false{% endif %}">
+          {{ result.classification }}
+        </span>
+      </p>
+      <p><strong>Confidence Score:</strong> {{ result.score }}%</p>
+      <p><strong>Reference:</strong> Referenced from {{ result.source_reference }}</p>
+    {% else %}
+      <p>No analysis yet. Submit a news article to see the result.</p>
+    {% endif %}
+
+    <h3>Your Recent Checks</h3>
+    <ul class="history-list">
+      {% for check in recent_checks %}
+        <li>
+          <span>{{ check.headline }}</span>
+          <span class="badge {% if check.classification == 'True' %}badge-true{% else %}badge-false{% endif %}">
+            {{ check.classification }} - {{ check.score }}%
+          </span>
+        </li>
+      {% empty %}
+        <li>No history available yet.</li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+
+<section class="card">
+  <h2>Trending News (Static Feed)</h2>
+  <div class="trending-grid">
+    {% for trend in trending_news %}
+      <article class="trend-item">
+        <h4>{{ trend.title }}</h4>
+        <p>
+          <span class="badge {% if trend.classification == 'True' %}badge-true{% else %}badge-false{% endif %}">
+            {{ trend.classification }}
+          </span>
+          Score: {{ trend.score }}%
+        </p>
+      </article>
+    {% endfor %}
+  </div>
+  <p class="muted">Static references include Google, Reddit, Wikipedia, and archived news datasets.</p>
+</section>
+{% endblock %}
