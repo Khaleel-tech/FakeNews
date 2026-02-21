@@ -1,22 +1,24 @@
 {% extends 'base.html' %}
-{% block title %}TruthLens | Detect Fake News{% endblock %}
+{% block title %}TruthLens | Detect Fake News with AI{% endblock %}
 {% block content %}
 <section class="hero">
   <div>
-    <h1>Detect Fake News in Seconds</h1>
-    <p>TruthLens helps you quickly assess if a story appears credible. Create your account and start validating claims instantly.</p>
+    <h1>Detect Fake News with Confidence</h1>
+    <p>TruthLens uses advanced AI-inspired analysis to help you quickly assess the credibility of news stories. Make informed decisions with detailed confidence scores and credibility references.</p>
     <div class="hero-actions">
-      <a class="btn-primary" href="{% url 'register' %}">Get Started</a>
-      <a class="btn-secondary" href="{% url 'login' %}">Login</a>
+      <a class="btn-primary" href="{% url 'register' %}">Get Started Free</a>
+      <a class="btn-secondary" href="{% url 'login' %}">Sign In</a>
     </div>
   </div>
-  <div class="card glow">
-    <h3>What you get</h3>
+  
+  <div class="card">
+    <h3>What You Get</h3>
     <ul>
-      <li>AI-inspired fake/true classification</li>
-      <li>Confidence score for each article</li>
-      <li>Static references from Google, Reddit, and more</li>
-      <li>Trending public stories with credibility tags</li>
+      <li><strong>AI-Powered Analysis</strong> - Intelligent fake/real news detection</li>
+      <li><strong>Confidence Scores</strong> - Understand certainty levels for each prediction</li>
+      <li><strong>Source References</strong> - Cited references from Google, Reddit, Wikipedia and more</li>
+      <li><strong>Trending Feed</strong> - See credibility ratings on popular news stories</li>
+      <li><strong>Check History</strong> - Track all your analysis in one place</li>
     </ul>
   </div>
 </section>

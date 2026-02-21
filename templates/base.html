@@ -4,7 +4,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% block title %}TruthLens{% endblock %}</title>
+  <meta name="description" content="TruthLens - Detect fake news using AI-inspired classification">
+  <title>{% block title %}TruthLens - Fake News Detection{% endblock %}</title>
   <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 <body>
@@ -15,7 +16,7 @@
         <a href="{% url 'dashboard' %}">Dashboard</a>
         <form action="{% url 'logout' %}" method="post" class="inline-form">
           {% csrf_token %}
-          <button type="submit" class="link-button">Logout</button>
+          <button type="submit">Logout</button>
         </form>
       {% else %}
         <a href="{% url 'login' %}">Login</a>
@@ -35,5 +36,9 @@
 
     {% block content %}{% endblock %}
   </main>
+
+  <footer style="text-align: center; padding: 2rem; color: var(--text-muted); border-top: 1px solid var(--surface-borders); margin-top: 3rem;">
+    <p>&copy; 2024 TruthLens. Detect fake news with confidence.</p>
+  </footer>
 </body>
 </html>

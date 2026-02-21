@@ -1,73 +1,125 @@
 {% extends 'base.html' %}
 {% block title %}Dashboard | TruthLens{% endblock %}
 {% block content %}
+<div style="margin-bottom: 2rem;">
+  <h1>News Credibility Dashboard</h1>
+  <p style="color: var(--text-light); font-size: 1.05rem;">Analyze news stories and check their authenticity with AI-powered detection</p>
+</div>
+
 <section class="dashboard-grid">
   <div class="card">
-    <h2>Check News Credibility</h2>
-    <p>Paste a headline and content to classify whether it is likely true or false.</p>
-    <form method="post">
+    <h2>Analyze News Article</h2>
+    <p style="color: var(--text-light);">Enter a news headline and content to get an instant credibility assessment</p>
+    
+    <form method="post" style="margin-top: 1.5rem;">
       {% csrf_token %}
-      {{ form.as_p }}
-      <button type="submit" class="btn-primary">Analyze News</button>
+      {% for field in form %}
+        <p>
+          <label for="{{ field.id_for_label }}" style="font-weight: 500;">{{ field.label }}</label>
+          {{ field }}
+          {% if field.errors %}
+            <small style="color: var(--danger);">{{ field.errors }}</small>
+          {% endif %}
+        </p>
+      {% endfor %}
+      <button type="submit" class="btn-primary" style="width: 100%; padding: 0.85rem; margin-top: 1rem;">Analyze News</button>
     </form>
 
     <div class="samples">
-      <h3>Popular News Suggestions</h3>
+      <h3>Popular News Samples</h3>
+      <p style="color: var(--text-light); font-size: 0.9rem;">Click to use as reference:</p>
       {% for item in popular_news_samples %}
         <div class="sample-item">
           <strong>{{ item.headline }}</strong>
-          <p>{{ item.content }}</p>
+          <p>{{ item.content|truncatewords:15 }}</p>
         </div>
+      {% empty %}
+        <p style="color: var(--text-muted);">No samples available</p>
       {% endfor %}
     </div>
   </div>
 
   <div class="card">
-    <h2>Detection Result</h2>
+    <h2>Analysis Result</h2>
     {% if result %}
-      <p><strong>Headline:</strong> {{ result.headline }}</p>
-      <p><strong>Prediction:</strong>
-        <span class="badge {% if result.classification == 'True' %}badge-true{% else %}badge-false{% endif %}">
-          {{ result.classification }}
-        </span>
-      </p>
-      <p><strong>Confidence Score:</strong> {{ result.score }}%</p>
-      <p><strong>Reference:</strong> Referenced from {{ result.source_reference }}</p>
+      <div style="background: var(--surface); padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
+        <div style="margin-bottom: 1rem;">
+          <p style="color: var(--text-light); margin-bottom: 0.5rem;">
+            <span style="font-weight: 500;">Headline:</span>
+          </p>
+          <p style="color: var(--text); font-weight: 500;">{{ result.headline }}</p>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+          <div>
+            <p style="color: var(--text-light); font-size: 0.9rem; margin-bottom: 0.25rem;">Classification</p>
+            <span class="badge {% if result.classification == 'True' %}badge-true{% else %}badge-false{% endif %}">
+              {{ result.classification|upper }}
+            </span>
+          </div>
+          <div>
+            <p style="color: var(--text-light); font-size: 0.9rem; margin-bottom: 0.25rem;">Confidence Score</p>
+            <p style="color: var(--text); font-weight: 700; margin: 0;">{{ result.score }}%</p>
+          </div>
+        </div>
+        
+        <p style="color: var(--text-light); font-size: 0.9rem; margin-bottom: 0.25rem;">
+          <span style="font-weight: 500;">Reference Source:</span>
+        </p>
+        <p style="color: var(--text);">{{ result.source_reference }}</p>
+      </div>
     {% else %}
-      <p>No analysis yet. Submit a news article to see the result.</p>
+      <div style="padding: 2rem; text-align: center; background: var(--surface); border-radius: 8px; border: 2px dashed var(--surface-borders);">
+        <p style="color: var(--text-muted); font-size: 1.05rem;">No analysis yet</p>
+        <p style="color: var(--text-light);">Submit a news article on the left to see credibility results here</p>
+      </div>
     {% endif %}
 
-    <h3>Your Recent Checks</h3>
-    <ul class="history-list">
-      {% for check in recent_checks %}
-        <li>
-          <span>{{ check.headline }}</span>
-          <span class="badge {% if check.classification == 'True' %}badge-true{% else %}badge-false{% endif %}">
-            {{ check.classification }} - {{ check.score }}%
-          </span>
-        </li>
-      {% empty %}
-        <li>No history available yet.</li>
-      {% endfor %}
-    </ul>
+    <h3 style="margin-top: 2rem;">Your Recent Checks</h3>
+    {% if recent_checks %}
+      <ul class="history-list">
+        {% for check in recent_checks %}
+          <li>
+            <span style="flex: 1;">{{ check.headline }}</span>
+            <div style="display: flex; gap: 0.5rem; align-items: center;">
+              <span class="badge {% if check.classification == 'True' %}badge-true{% else %}badge-false{% endif %}">
+                {{ check.classification }}
+              </span>
+              <span style="color: var(--text-light); font-weight: 500; min-width: 50px; text-align: right;">{{ check.score }}%</span>
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p style="color: var(--text-muted); text-align: center; padding: 1rem;">No history available yet. Start analyzing articles to build your history.</p>
+    {% endif %}
   </div>
 </section>
 
-<section class="card">
-  <h2>Trending News (Static Feed)</h2>
-  <div class="trending-grid">
-    {% for trend in trending_news %}
-      <article class="trend-item">
-        <h4>{{ trend.title }}</h4>
-        <p>
-          <span class="badge {% if trend.classification == 'True' %}badge-true{% else %}badge-false{% endif %}">
-            {{ trend.classification }}
-          </span>
-          Score: {{ trend.score }}%
-        </p>
-      </article>
-    {% endfor %}
-  </div>
-  <p class="muted">Static references include Google, Reddit, Wikipedia, and archived news datasets.</p>
+<section class="card" style="margin-top: 2rem;">
+  <h2>Trending News Stories</h2>
+  <p style="color: var(--text-light);">Credibility analysis of popular news stories from our database</p>
+  
+  {% if trending_news %}
+    <div class="trending-grid">
+      {% for trend in trending_news %}
+        <article class="trend-item">
+          <h4>{{ trend.title }}</h4>
+          <p>
+            <span class="badge {% if trend.classification == 'True' %}badge-true{% else %}badge-false{% endif %}">
+              {{ trend.classification }}
+            </span>
+            <span style="font-weight: 500; color: var(--text);">{{ trend.score }}% Confidence</span>
+          </p>
+        </article>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p style="color: var(--text-muted); text-align: center; padding: 2rem;">No trending news available at the moment</p>
+  {% endif %}
+  
+  <p class="muted" style="margin-top: 1.5rem;">
+    <strong>Data Sources:</strong> Our database includes references from Google News, Reddit, Wikipedia, and archived news datasets for comprehensive analysis.
+  </p>
 </section>
 {% endblock %}

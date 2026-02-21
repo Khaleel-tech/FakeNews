@@ -2,12 +2,25 @@
 {% block title %}Login | TruthLens{% endblock %}
 {% block content %}
 <section class="auth-card">
-  <h2>Login</h2>
+  <h2>Sign In to TruthLens</h2>
+  <p style="color: var(--text-light); margin-bottom: 2rem;">Access your dashboard and check news credibility</p>
+  
   <form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn-primary">Sign In</button>
+    {% for field in form %}
+      <p>
+        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {{ field }}
+        {% if field.errors %}
+          <small style="color: var(--danger);">{{ field.errors }}</small>
+        {% endif %}
+      </p>
+    {% endfor %}
+    <button type="submit" class="btn-primary" style="width: 100%; padding: 0.85rem;">Sign In</button>
   </form>
-  <p>Don't have an account? <a href="{% url 'register' %}">Register here</a>.</p>
+  
+  <p style="text-align: center; margin-top: 1.5rem; color: var(--text-light);">
+    Don't have an account? <a href="{% url 'register' %}">Create one</a>
+  </p>
 </section>
 {% endblock %}
