@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard | TruthLens{% endblock %}
+{% block content %}
+<section class="dashboard-header">
+  <h1>News Verification Dashboard</h1>
+  <p>Analyze any story and review confidence-backed credibility insights.</p>
+</section>
+
+<section class="dashboard-grid">
+  <div class="card panel">
+    <h2>Analyze a News Story</h2>
+    <p class="muted">Enter a headline and article content for quick true/false scoring.</p>
+    <form method="post" class="spaced-form">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit" class="btn-primary">Run Analysis</button>
+    </form>
+
+    <div class="samples">
+      <h3>Popular stories to test</h3>
+      {% for item in popular_news_samples %}
+        <div class="sample-item">
+          <strong>{{ item.headline }}</strong>
+          <p>{{ item.content }}</p>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="card panel">
+    <h2>Analysis Result</h2>
+    {% if result %}
+      <div class="result-block">
+        <p class="result-headline">{{ result.headline }}</p>
+        <p>
+          <span class="badge {% if result.classification == 'True' %}badge-true{% else %}badge-false{% endif %}">
+            {{ result.classification }}
+          </span>
+        </p>
+        <p><strong>Confidence:</strong> {{ result.score }}%</p>
+        <p><strong>Reference:</strong> Referenced from {{ result.source_reference }}</p>
+      </div>
+    {% else %}
+      <p class="muted">Submit a story to view prediction results.</p>
+    {% endif %}
+
+    <h3>Recent Checks</h3>
+    <ul class="history-list">
+      {% for check in recent_checks %}
+        <li>
+          <span>{{ check.headline }}</span>
+          <span class="badge {% if check.classification == 'True' %}badge-true{% else %}badge-false{% endif %}">
+            {{ check.classification }} • {{ check.score }}%
+          </span>
+        </li>
+      {% empty %}
+        <li class="muted">No history available yet.</li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+
+<section class="card panel">
+  <h2>Trending News (Professional Feed)</h2>
+  <div class="trending-grid">
+    {% for trend in trending_news %}
+      <article class="trend-item">
+        <h4>{{ trend.title }}</h4>
+        <p>
+          <span class="badge {% if trend.classification == 'True' %}badge-true{% else %}badge-false{% endif %}">
+            {{ trend.classification }}
+          </span>
+          <span class="muted">Score: {{ trend.score }}%</span>
+        </p>
+      </article>
+    {% endfor %}
+  </div>
+  <p class="muted">Static references shown from Google, Reddit, Wikipedia, and archived datasets.</p>
+</section>
+{% endblock %}

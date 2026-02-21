@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %}TruthLens | Professional News Verification{% endblock %}
+{% block content %}
+<section class="hero professional">
+  <div>
+    <p class="eyebrow">Trusted media intelligence</p>
+    <h1>Professional fake news detection for everyday readers.</h1>
+    <p class="lead">TruthLens helps you evaluate headlines and full articles with confidence scoring, static references, and a curated trending feed.</p>
+    <div class="hero-actions">
+      <a class="btn-primary" href="{% url 'register' %}">Create Free Account</a>
+      <a class="btn-outline" href="{% url 'login' %}">Sign In</a>
+    </div>
+  </div>
+  <div class="card panel">
+    <h3>Why TruthLens?</h3>
+    <ul class="feature-list">
+      <li>Simple, clean verification dashboard</li>
+      <li>Transparent confidence score output</li>
+      <li>Static source references (Google, Reddit, Wikipedia)</li>
+      <li>Trending stories with true/false labels</li>
+    </ul>
+  </div>
+</section>
+
+<section class="stats-strip">
+  <article>
+    <h3>3+</h3>
+    <p>Major source references</p>
+  </article>
+  <article>
+    <h3>Instant</h3>
+    <p>Article credibility check</p>
+  </article>
+  <article>
+    <h3>Secure</h3>
+    <p>Authentication with Django</p>
+  </article>
+</section>
+{% endblock %}

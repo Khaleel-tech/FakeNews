@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}Register | TruthLens{% endblock %}
+{% block content %}
+<section class="auth-card panel">
+  <p class="eyebrow">Get started</p>
+  <h2>Create your TruthLens account</h2>
+  <form method="post" class="spaced-form">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn-primary">Create Account</button>
+  </form>
+  <p class="muted">Already registered? <a href="{% url 'login' %}">Sign in here</a>.</p>
+</section>
+{% endblock %}
